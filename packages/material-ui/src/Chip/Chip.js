@@ -266,7 +266,6 @@ function isDeleteKeyboardEvent(keyboardEvent, allowedKeys = []) {
     'Delete',
     ...allowedKeys
   ];
-  console.log(keys);
   return keys.includes(keyboardEvent.key);
 }
 
@@ -306,7 +305,6 @@ const Chip = React.forwardRef(function Chip(props, ref) {
   };
 
   const handleKeyDown = (event) => {
-    console.log('handleKeyDown');
     // Ignore events from children of `Chip`.
     if (event.currentTarget === event.target) {
       const allowedKeys = !onClick ? ['Enter',' ',] : [];
@@ -323,13 +321,10 @@ const Chip = React.forwardRef(function Chip(props, ref) {
   };
 
   const handleKeyUp = (event) => {
-    console.log('handleKeyUp');
-
     // Ignore events from children of `Chip`.
     if (event.currentTarget === event.target) {
       const allowedKeys = !onClick ? ['Enter',' ',] : [];
       if (onDelete && isDeleteKeyboardEvent(event, allowedKeys)) {
-        console.log('running onDelete');
         onDelete(event);
       } else if (event.key === 'Escape' && chipRef.current) {
         chipRef.current.blur();
