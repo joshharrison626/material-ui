@@ -413,7 +413,7 @@ const Chip = React.forwardRef(function Chip(props, ref) {
       )}
       aria-disabled={disabled ? true : undefined}
       tabIndex={clickable || onDelete ? 0 : undefined}
-      onClick={onClick}
+      onClick={onClick || onDelete}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
       ref={handleRef}
