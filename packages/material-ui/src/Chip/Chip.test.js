@@ -370,8 +370,45 @@ describe('<Chip />', () => {
       expect(handleClick.callCount).to.equal(1);
     });
 
-    describe('prop: onDelete', () => {
+    describe('prop: onDelete and onClick', () => {
       ['Backspace', 'Delete'].forEach((key) => {
+        it(`should call onDelete '${key}' is released`, () => {
+          const handleDelete = spy();
+          const handleKeyDown = spy((event) => event.defaultPrevented);
+          const { getAllByRole } = render(
+            <Chip onClick={() => {}} onKeyDown={handleKeyDown} onDelete={handleDelete} />,
+          );
+          const chip = getAllByRole('button')[0];
+          act(() => {
+            chip.focus();
+          });
+
+          fireEvent.keyDown(chip, { key });
+
+          // defaultPrevented?
+          expect(handleKeyDown.returnValues[0]).to.equal(true);
+          expect(handleDelete.callCount).to.equal(0);
+
+          fireEvent.keyUp(chip, { key });
+
+          expect(handleDelete.callCount).to.equal(1);
+        });
+      });
+
+      it('should not prevent default on input', () => {
+        const handleKeyDown = spy((event) => event.defaultPrevented);
+        const { container } = render(<Chip label={<input />} onKeyDown={handleKeyDown} />);
+        const input = container.querySelector('input');
+        input.focus();
+        fireEvent.keyDown(input, { key: 'Backspace' });
+
+        // defaultPrevented?
+        expect(handleKeyDown.returnValues[0]).to.equal(false);
+      });
+    });
+
+    describe('prop: onDelete without onClick', () => {
+      ['Backspace', 'Delete', 'Enter', ' '].forEach((key) => {
         it(`should call onDelete '${key}' is released`, () => {
           const handleDelete = spy();
           const handleKeyDown = spy((event) => event.defaultPrevented);

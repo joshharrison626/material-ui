@@ -62,4 +62,8 @@ You can use the `size` prop to define a small Chip.
 
 ## Accessibility
 
-If the Chip is deletable or clickable then it is a button in tab order. When the Chip is focused (e.g. when tabbing) releasing (`keyup` event) `Backspace` or `Delete` will call the `onDelete` handler while releasing `Escape` will blur the Chip.
+If the Chip is deletable or clickable then it is a button in tab order.
+
+When the Chip is focused (e.g. when tabbing) and it includes an `onClick` and `onDelete` handler, then releasing (`keyup` event) `Backspace` or `Delete` will call the `onDelete` handler while `Enter` and `Space` will call the `onClick` handler. Releasing `Escape` will blur the Chip.
+
+When the Chip is focused (e.g. when tabbing) and it includes only an `onDelete` handler, then releasing (`keyup` event) `Backspace`, `Delete`, `Enter`, or `Space` will call the `onDelete` handler. Releasing `Escape` will blur the Chip.

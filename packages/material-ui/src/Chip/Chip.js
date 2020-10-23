@@ -262,8 +262,9 @@ export const styles = (theme) => {
   };
 };
 
-function isDeleteKeyboardEvent(keyboardEvent) {
-  return keyboardEvent.key === 'Backspace' || keyboardEvent.key === 'Delete';
+function isDeleteKeyboardEvent(keyboardEvent, allowedKeys = []) {
+  const keys = ['Backspace', 'Delete', ...allowedKeys];
+  return keys.includes(keyboardEvent.key);
 }
 
 /**
@@ -303,10 +304,13 @@ const Chip = React.forwardRef(function Chip(props, ref) {
 
   const handleKeyDown = (event) => {
     // Ignore events from children of `Chip`.
-    if (event.currentTarget === event.target && isDeleteKeyboardEvent(event)) {
-      // will be handled in keyUp, otherwise some browsers
-      // might init navigation
-      event.preventDefault();
+    if (event.currentTarget === event.target) {
+      const allowedKeys = !onClick ? ['Enter', ' '] : [];
+      if (onDelete && isDeleteKeyboardEvent(event, allowedKeys)) {
+        // will be handled in keyUp, otherwise some browsers
+        // might init navigation
+        event.preventDefault();
+      }
     }
 
     if (onKeyDown) {
@@ -317,7 +321,8 @@ const Chip = React.forwardRef(function Chip(props, ref) {
   const handleKeyUp = (event) => {
     // Ignore events from children of `Chip`.
     if (event.currentTarget === event.target) {
-      if (onDelete && isDeleteKeyboardEvent(event)) {
+      const allowedKeys = !onClick ? ['Enter', ' '] : [];
+      if (onDelete && isDeleteKeyboardEvent(event, allowedKeys)) {
         onDelete(event);
       } else if (event.key === 'Escape' && chipRef.current) {
         chipRef.current.blur();
@@ -427,7 +432,7 @@ const Chip = React.forwardRef(function Chip(props, ref) {
         className,
       )}
       disabled={clickable && disabled ? true : undefined}
-      onClick={onClick}
+      onClick={onClick || onDelete}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
       ref={handleRef}
