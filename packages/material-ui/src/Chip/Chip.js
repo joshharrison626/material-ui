@@ -260,14 +260,14 @@ export const styles = (theme) => {
   };
 };
 
-function isDeleteKeyboardEvent(keyboardEvent) {
-  const allowedKeys = [
+function isDeleteKeyboardEvent(keyboardEvent, allowedKeys = []) {
+  const keys = [
     'Backspace',
     'Delete',
-    'Enter',
-    ' ',
+    ...allowedKeys
   ];
-  return allowedKeys.includes(keyboardEvent.key);
+  console.log(keys);
+  return keys.includes(keyboardEvent.key);
 }
 
 /**
@@ -306,11 +306,15 @@ const Chip = React.forwardRef(function Chip(props, ref) {
   };
 
   const handleKeyDown = (event) => {
+    console.log('handleKeyDown');
     // Ignore events from children of `Chip`.
-    if (event.currentTarget === event.target && onDelete && isDeleteKeyboardEvent(event)) {
-      // will be handled in keyUp, otherwise some browsers
-      // might init navigation
-      event.preventDefault();
+    if (event.currentTarget === event.target) {
+      const allowedKeys = !onClick ? ['Enter',' ',] : [];
+      if (onDelete && isDeleteKeyboardEvent(event, allowedKeys)) {
+        // will be handled in keyUp, otherwise some browsers
+        // might init navigation
+        event.preventDefault();
+      }
     }
 
     if (onKeyDown) {
@@ -319,9 +323,13 @@ const Chip = React.forwardRef(function Chip(props, ref) {
   };
 
   const handleKeyUp = (event) => {
+    console.log('handleKeyUp');
+
     // Ignore events from children of `Chip`.
     if (event.currentTarget === event.target) {
-      if (onDelete && isDeleteKeyboardEvent(event)) {
+      const allowedKeys = !onClick ? ['Enter',' ',] : [];
+      if (onDelete && isDeleteKeyboardEvent(event, allowedKeys)) {
+        console.log('running onDelete');
         onDelete(event);
       } else if (event.key === 'Escape' && chipRef.current) {
         chipRef.current.blur();
