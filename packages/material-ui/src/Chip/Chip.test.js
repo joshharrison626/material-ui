@@ -9,7 +9,7 @@ import { createClientRender, fireEvent } from 'test/utils/createClientRender';
 import Avatar from '../Avatar';
 import Chip from './Chip';
 
-describe.only('<Chip />', () => {
+describe('<Chip />', () => {
   let classes;
   const mount = createMount();
   const render = createClientRender();
