@@ -356,7 +356,7 @@ describe('<Chip />', () => {
     });
 
     describe('prop: onDelete and onClick', () => {
-      ['Backspace', 'Delete',].forEach((key) => {
+      ['Backspace', 'Delete'].forEach((key) => {
         it(`should call onDelete '${key}' is released`, () => {
           const handleDelete = spy();
           const handleKeyDown = spy((event) => event.defaultPrevented);
